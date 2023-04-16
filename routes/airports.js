@@ -3,7 +3,16 @@ const { Flight } = require("../models/plain");
 const { User } = require("../models/user");
 
 router.get("/get", (req, res) => {
-  console.log(req);
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  //console.log(req);
   Flight.find({}, null, { timeout: 30000 })
     .then((data) => {
       res.status(200).send(data);
@@ -14,7 +23,16 @@ router.get("/get", (req, res) => {
     });
 });
 router.post("/put/id", (req, res) => {
-  console.log(req);
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  //console.log(req);
   const id = req.body._id;
   Flight.findOneAndUpdate({_id:id}, req.body)
     .then((data) => {
@@ -26,7 +44,16 @@ router.post("/put/id", (req, res) => {
     });
 });
 router.post("/delete/id", (req, res) => {
-  console.log(req);
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  //console.log(req);
   const id = req.body._id;
   Flight.findOneAndDelete({_id:id})
     .then((data) => {
@@ -38,7 +65,16 @@ router.post("/delete/id", (req, res) => {
     });
 });
 router.post("/get/id", (req, res) => {
-  console.log(req);
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  //console.log(req);
   const id = req.body._id;
   Flight.findOne({_id:id})
     .then((data) => {
@@ -52,7 +88,16 @@ router.post("/get/id", (req, res) => {
 });
 
 router.post("/get/bookings", async (req, res) => {
-  console.log(req);
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  //console.log(req);
   const userId = req.body.userId;
   const bookingId = req.body.bookingId;
   User.findOne({ _id: userId })
@@ -101,7 +146,16 @@ router.post("/get/bookings", async (req, res) => {
     });
 });
 router.post("/put/bookings", async (req, res) => {
-  console.log(req);
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  //console.log(req);
   const userId = req.body.userId;
   const booking = req.body.myBooking;
   const data = req.body.data;
@@ -129,8 +183,17 @@ router.post("/put/bookings", async (req, res) => {
 });
 
 router.post("/put", async (req, res) => {
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
   try {
-    console.log(req.body);
+    //console.log(req.body);
     await new Flight({ ...req.body })
       .save()
       .then((savedData) => {
@@ -147,8 +210,17 @@ router.post("/put", async (req, res) => {
   }
 });
 router.post("/get/myBookings", async (req, res) => {
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
   try {
-    console.log(req.body);
+    //console.log(req.body);
     const userId = req.body.userId;
     await User.findById(userId)
       .populate("myBookings._id")
