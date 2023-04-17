@@ -16,9 +16,9 @@ router.get("/get", (req, res) => {
 router.post("/put/id", (req, res) => {
   console.log(req);
   const id = req.body._id;
-  Flight.findOneAndUpdate({_id:id}, req.body)
+  Flight.findOneAndUpdate({ _id: id }, req.body)
     .then((data) => {
-      res.status(200).send({data: data, message: "Updated successfully" });
+      res.status(200).send({ data: data, message: "Updated successfully" });
     })
     .catch((error) => {
       console.log(error);
@@ -28,9 +28,9 @@ router.post("/put/id", (req, res) => {
 router.post("/delete/id", (req, res) => {
   console.log(req);
   const id = req.body._id;
-  Flight.findOneAndDelete({_id:id})
+  Flight.findOneAndDelete({ _id: id })
     .then((data) => {
-      res.status(200).send({data: data, message: "Deleted successfully" });
+      res.status(200).send({ data: data, message: "Deleted successfully" });
     })
     .catch((error) => {
       console.log(error);
@@ -40,7 +40,7 @@ router.post("/delete/id", (req, res) => {
 router.post("/get/id", (req, res) => {
   console.log(req);
   const id = req.body._id;
-  Flight.findOne({_id:id})
+  Flight.findOne({ _id: id })
     .then((data) => {
       console.log(data);
       res.status(200).send(data);
@@ -101,31 +101,112 @@ router.post("/get/bookings", async (req, res) => {
     });
 });
 router.post("/put/bookings", async (req, res) => {
-  console.log(req);
+  //console.log(req);
   const userId = req.body.userId;
   const booking = req.body.myBooking;
   const data = req.body.data;
 
-  Flight.findOneAndUpdate({ _id: data._id }, data)
-    .then((update) => {
-      console.log("Updated Flight");
-    })
-    .catch((error) => {
-      console.log("Something wrong");
-      res.status(500).send("Something went wrong");
-    });
   const filter = { _id: userId };
   const update = { $addToSet: { myBookings: booking } };
-  const options = { upsert: true, new: true };
-  const result = await User.findOneAndUpdate(filter, update, options)
-    .then((update) => {
-      console.log("Value Added");
-      res.status(200).send("Booked successfully");
+  //const options = { upsert: true, new: true };
+  // const result = await User.findOneAndUpdate(filter, update)
+  //   .then((update) => {
+  //     console.log("Value Added");
+  //     res.status(200).send("Booked successfully");
+  //   })
+  //   .catch((error) => {
+  //     console.log("Something went wrong");
+  //     res.status(500).send("Something went wrong");
+  //   });
+  await User.findOneAndUpdate(
+    { _id: userId, "myBookings._id": booking._id },
+    { $set: { "myBookings.$": booking } },
+    { new: true }
+  )
+    .then((updatedFlight) => {
+      if (!updatedFlight) {
+        return User.findOneAndUpdate(
+          { _id: userId },
+          { $push: { myBookings: booking } },
+          { new: true }
+        );
+      }
+      //return updatedFlight;
+      console.log("updated");
     })
-    .catch((error) => {
-      console.log("Something went wrong");
-      res.status(500).send("Something went wrong");
+    .then((updatedFlight) => {
+      // do something with the updated flight record
+    })
+    .catch((err) => {
+      // handle error
     });
+
+  // Flight.findOneAndUpdate({ _id: data._id }, data)
+  //   .then((update) => {
+  //     console.log("Updated Flight");
+  //     res.status(200).send("Updated");
+  //   })
+  //   .catch((error) => {
+  //     console.log("Something wrong");
+  //     res.status(500).send("Something went wrong");
+  //   });
+  var flightId = booking._id;
+  var numSeatsToBook = booking.seats;
+  var bookedDate = booking.bookedDate;
+  await Flight.findOneAndUpdate(
+    {
+      _id: flightId,
+      "bookings._id": userId,
+      seats: { $gte: numSeatsToBook },
+    },
+    {
+      $inc: { seats: -numSeatsToBook, "bookings.$.seats": numSeatsToBook },
+      $set: { "bookings.$.bookedDate": new Date() },
+    },
+    {
+      new: true,
+    }
+  )
+    .then((updatedFlight) => {
+      if (updatedFlight) {
+        // An existing booking was updated
+        console.log("Updated flight:", updatedFlight);
+        res.status(200).send("Booked Successfully");
+      } else {
+        // No existing booking was found, create a new one
+        Flight.findOneAndUpdate(
+          {
+            _id: flightId,
+            seats: { $gte: numSeatsToBook },
+          },
+          {
+            $inc: { seats: -numSeatsToBook },
+            $addToSet: {
+              bookings: {
+                _id: userId,
+                seats: numSeatsToBook,
+                bookedDate: new Date(),
+              },
+            },
+          },
+          {
+            new: true,
+          }
+        )
+          .then((updatedFlight) => {
+            console.log("Updated flight:", updatedFlight);
+            res.status(200).send("Booked Successfully");
+          })
+          .catch((err) => {
+            console.error("Error:", err);
+          });
+      }
+    })
+    .catch((err) => {
+      console.error("Error:", err);
+    });
+
+  //res.status(200).send("Booked Successfully");
 });
 
 router.post("/put", async (req, res) => {
@@ -152,6 +233,24 @@ router.post("/get/myBookings", async (req, res) => {
     const userId = req.body.userId;
     await User.findById(userId)
       .populate("myBookings._id")
+      .exec()
+      .then((user) => {
+        console.log(user);
+        res.status(200).send(user);
+      })
+      .catch((err) => {
+        console.log(err.stack);
+      });
+  } catch (error) {
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+router.post("/get/adminBookings", async (req, res) => {
+  try {
+    console.log(req.body);
+    const userId = req.body.userId;
+    await Flight.findById(userId)
+      .populate("bookings._id")
       .exec()
       .then((user) => {
         console.log(user);
