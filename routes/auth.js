@@ -10,7 +10,16 @@ router.get("/", (req, res) => {
 });
 
 router.post("/log", async (req, res) => {
-  console.log(req.body);
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  //console.log(req.body);
   try {
     const { error } = validate(req.body);
     if (error)
@@ -29,7 +38,16 @@ router.post("/log", async (req, res) => {
   }
 });
 router.post("/admin/log", async (req, res) => {
-  console.log(req.body);
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  //console.log(req.body);
   try {
     const { error } = validate(req.body);
     if (error)
@@ -58,7 +76,16 @@ const validate = (data) => {
 
 //const bcrypt = require("bcryptjs");
 router.post("/register", async (req, res) => {
-  console.log(req.body);
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  //console.log(req.body);
   try {
     let user = await User.findOne({ email: req.body.email });
     if (user)
@@ -84,7 +111,16 @@ router.post("/register", async (req, res) => {
   }
 });
 router.post("/admin/register", async (req, res) => {
-  console.log(req.body);
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  //console.log(req.body);
   try {
     let user = await Admin.findOne({ email: req.body.email });
     if (user)
